@@ -415,11 +415,12 @@ import SiteHeader from "../components/SiteHeader.astro";
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    padding: 0.65rem 1rem;
+    padding: 0.75rem 1.15rem;
     color: #fff;
     border: 1px solid;
     border-radius: 9px;
-    transition: background-color 0.2s;
+    font-weight: 700;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
   }
 
   .home-contact-options svg {
@@ -432,12 +433,14 @@ import SiteHeader from "../components/SiteHeader.astro";
   }
 
   .home-contact-options .contact-whatsapp {
-    background: rgba(37, 211, 102, 0.12);
+    background: #101b14;
     border-color: #25d366;
   }
 
-  .home-contact-options .contact-whatsapp:hover {
-    background: rgba(37, 211, 102, 0.25);
+  .home-contact-options .contact-whatsapp:hover,
+  .home-contact-options .contact-whatsapp:focus-visible {
+    box-shadow: 0 0 12px rgba(37, 211, 102, 0.75), 0 0 28px rgba(37, 211, 102, 0.4);
+    transform: translateY(-2px);
   }
 
   .home-contact-options .telegram-icon {
@@ -445,12 +448,14 @@ import SiteHeader from "../components/SiteHeader.astro";
   }
 
   .home-contact-options .contact-telegram {
-    background: rgba(34, 158, 217, 0.12);
+    background: #101820;
     border-color: #229ed9;
   }
 
-  .home-contact-options .contact-telegram:hover {
-    background: rgba(34, 158, 217, 0.25);
+  .home-contact-options .contact-telegram:hover,
+  .home-contact-options .contact-telegram:focus-visible {
+    box-shadow: 0 0 12px rgba(34, 158, 217, 0.75), 0 0 28px rgba(34, 158, 217, 0.4);
+    transform: translateY(-2px);
   }
 
   /* SECCIÓN TRABAJA CON NOSOTROS */
