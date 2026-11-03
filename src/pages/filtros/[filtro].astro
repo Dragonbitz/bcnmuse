@@ -1,0 +1,260 @@
+---
+import { filtros, modelos } from "../../data/modelos";
+import SiteHeader from "../../components/SiteHeader.astro";
+
+export function getStaticPaths() {
+  return filtros.map((filtro) => ({
+    params: { filtro: filtro.slug },
+    props: {
+      filtro,
+      modelosFiltrados: modelos.filter((modelo) => modelo.filtros.includes(filtro.slug)),
+    },
+  }));
+}
+
+const { filtro, modelosFiltrados } = Astro.props;
+---
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content={`Modelos ${filtro.nombre.toLowerCase()} de BCN Muse en Barcelona.`}
+    />
+    <title>{filtro.nombre} | BCN Muse</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <SiteHeader />
+
+    <main>
+      <section class="page-heading">
+        <p class="eyebrow">Descubre nuestro catálogo</p>
+        <h1>Modelos {filtro.nombre}</h1>
+        <p>{modelosFiltrados.length} modelos en esta selección</p>
+      </section>
+
+      {modelosFiltrados.length > 0 ? (
+        <section class="models-grid" aria-label={`Modelos ${filtro.nombre.toLowerCase()}`}>
+          {modelosFiltrados.map((modelo) => (
+            <a href={`/modelos/${modelo.slug}`} class="model-card">
+              <div class="image-wrapper">
+                <img
+                  src={modelo.fotoPortada}
+                  alt={modelo.nombre}
+                  style={`object-position: center ${modelo.posicionPortada};`}
+                />
+                {modelo.disponible && (
+                  <div class="status-badge">
+                    <span class="status-dot"></span>
+                    <span>Disponible</span>
+                  </div>
+                )}
+              </div>
+              <div class="model-info">
+                <h2>{modelo.nombre}</h2>
+                <p>{modelo.edad} años | {modelo.nacionalidad}</p>
+              </div>
+            </a>
+          ))}
+        </section>
+      ) : (
+        <p class="empty-state">No hay modelos en esta selección en este momento.</p>
+      )}
+    </main>
+  </body>
+</html>
+
+<style>
+  :global(*) {
+    box-sizing: border-box;
+  }
+
+  :global(html) {
+    min-height: 100%;
+    background: #0a0a0a;
+    color: #eee;
+    font-family: "PT Sans", sans-serif;
+  }
+
+  :global(body) {
+    min-height: 100vh;
+    margin: 0;
+  }
+
+  main {
+    width: min(1200px, calc(100% - 3rem));
+    margin: 0 auto;
+    padding: 3.5rem 0 5rem;
+  }
+
+  .page-heading {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .eyebrow {
+    margin: 0 0 0.5rem;
+    color: #d4af37;
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  h1,
+  h2 {
+    margin: 0;
+    font-family: Georgia, serif;
+    font-weight: 400;
+  }
+
+  h1 {
+    color: #fff;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    text-transform: uppercase;
+  }
+
+  .page-heading > p:last-child {
+    margin: 0.65rem 0 0;
+    color: #888;
+  }
+
+  .models-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+    gap: 1.5rem;
+  }
+
+  .model-card {
+    position: relative;
+    overflow: hidden;
+    color: inherit;
+    background: #121212;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    text-decoration: none;
+  }
+
+  .image-wrapper {
+    position: relative;
+    height: 420px;
+    overflow: hidden;
+  }
+
+  .image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .model-card:hover img {
+    transform: scale(1.05);
+  }
+
+  .status-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.7rem;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: rgba(10, 10, 10, 0.85);
+    border: 1px solid #27ae60;
+    border-radius: 999px;
+    animation: pulse-border 2s infinite;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    background: #27ae60;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #27ae60;
+    animation: pulse-dot 2s infinite;
+  }
+
+  @keyframes pulse-border {
+    0%,
+    100% {
+      border-color: #27ae60;
+      box-shadow: 0 0 8px rgba(39, 174, 96, 0.35);
+    }
+
+    50% {
+      border-color: rgba(39, 174, 96, 0.25);
+      box-shadow: 0 0 2px rgba(39, 174, 96, 0.08);
+    }
+  }
+
+  @keyframes pulse-dot {
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.4;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .status-badge,
+    .status-dot {
+      animation: none;
+    }
+  }
+
+  .model-info {
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .model-info h2 {
+    color: #fff;
+    font-size: 1.4rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .model-info p {
+    margin: 0.4rem 0 0;
+    color: #d4af37;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .empty-state {
+    padding: 2rem;
+    color: #aaa;
+    text-align: center;
+    border: 1px solid #d4af37;
+    border-radius: 14px;
+  }
+
+  @media (max-width: 600px) {
+    main {
+      width: calc(100% - 2rem);
+      padding-top: 2.5rem;
+    }
+
+    .image-wrapper {
+      height: 320px;
+    }
+  }
+</style>
